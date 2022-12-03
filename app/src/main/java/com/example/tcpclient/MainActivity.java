@@ -54,11 +54,11 @@ public class MainActivity extends AppCompatActivity {
         new Thread(clientThread).start();
 
         ipAddressText = findViewById(R.id.ipAddress);
-        ipAddressText.setText("35.203.25.23");
+        ipAddressText.setText("162.212.154.8");
         portNumberText = findViewById(R.id.portNumber);
-        portNumberText.setText("3389");
+        portNumberText.setText("42041");
         fileName = findViewById(R.id.fileName);
-        fileName.setText("29MB.txt");
+        fileName.setText("text.txt");
         messageText = findViewById(R.id.message);
 
         submitIpAndPort = findViewById(R.id.submitIpAndPort);
@@ -120,8 +120,9 @@ public class MainActivity extends AppCompatActivity {
 
             long fileLength = file.length();
             String separator = "<SEPARATOR>";
-            String fileInfo = fileName+separator+fileLength;
-            Log.d("TCPClientLog", "first message: " + fileInfo + " " +fileInfo.length());
+            String separatorEnd = "<SEPARATOREND>";
+            String fileInfo = fileName+separator+fileLength+separatorEnd;
+            Log.d("TCPClientLog", "first message: " + fileInfo + " " +fileInfo.length()+ " " + separatorEnd);
 
             try {
                 socket = new Socket(ipAddress, portNumber);
@@ -129,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
                 fis = new FileInputStream(file);
                 // send file information
                 dos.write(fileInfo.getBytes(), 0, fileInfo.length());
+                Thread.sleep(100);
 
                 byte[] buffer = new byte[2*1024];
                 int bytes = 0;
@@ -155,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
                 if(fis != null) fis.close();
             } catch (IOException e) {
                 Log.d("TCPClientLog", "Error for running socket " + e.getMessage());
+            } catch (InterruptedException e) {
+                Log.d("TCPClientLog", "sleeping error " + e.getMessage());
             }
         }
 
